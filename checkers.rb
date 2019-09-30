@@ -3,14 +3,15 @@ class Checkers
 
   def initialize
     @board = [
-      [" ", "x", " ", "x", " ", "x", " ", "x"],
-      ["x", " ", "x", " ", "x", " ", "x", " "],
-      [" ", "x", " ", "x", " ", "x", " ", "x"],
-      [" ", " ", " ", " ", " ", " ", " ", " "],
-      [" ", " ", " ", " ", " ", " ", " ", " "],
-      ["o", " ", "o", " ", "o", " ", "o", " "],
-      [" ", "o", " ", "o", " ", "o", " ", "o"],
-      ["o", " ", "o", " ", "o", " ", "o", " "],
+      [" ", "1", "2", "3", "4", "5", "6", "7", "8"],
+      ["1", " ", "x", " ", "x", " ", "x", " ", "x"],
+      ["2", "x", " ", "x", " ", "x", " ", "x", " "],
+      ["3", " ", "x", " ", "x", " ", "x", " ", "x"],
+      ["4", " ", " ", " ", " ", " ", " ", " ", " "],
+      ["5", " ", " ", " ", " ", " ", " ", " ", " "],
+      ["6", "o", " ", "o", " ", "o", " ", "o", " "],
+      ["7", " ", "o", " ", "o", " ", "o", " ", "o"],
+      ["8", "o", " ", "o", " ", "o", " ", "o", " "],
     ]
   end
 
@@ -18,20 +19,24 @@ class Checkers
     @board
   end
 
-  def find_piece(symbol, number)
-    symbol_array = []
-    @board.each do |row|
-      row.each do |i|
-        symbol_array << i if i == symbol
-      end
+  def move(current_player, row1, column1, row2, column2) # refactor, create variables for jumped spaces
+    checker = @board[row1][column1]
+    if (row1 - row2).abs == 2 &&
+       (column1 - column2).abs == 2 &&
+       @board[((row1 + row2) / 2)][((column1 + column2) / 2)] != " " &&
+       @board[((row1 + row2) / 2)][((column1 + column2) / 2)] != current_player
+      @board[row1][column1] = " "
+      @board[((row1 + row2) / 2)][((column1 + column2) / 2)] = " "
+      @board[row2][column2] = checker
+      @board
+    elsif @board[row2][column2] == " " &&
+          (row1 - row2).abs == 1 &&
+          (column1 - column2).abs == 1
+      @board[row1][column1] = " "
+      @board[row2][column2] = checker
+      @board
+    else
+      "Invalid move"
     end
-    symbol_array.fetch(number - 1)
-  end
-
-  def move
-    # find all remaining x's and o's and place in arrays
-    # find specified piece
-    # move piece specified direction
-    # return new game board
   end
 end

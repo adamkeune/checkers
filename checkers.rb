@@ -1,4 +1,5 @@
 class Checkers
+  attr_reader :current_player
   attr_accessor :board
 
   def initialize
@@ -13,10 +14,20 @@ class Checkers
       ["7", " ", "o", " ", "o", " ", "o", " ", "o"],
       ["8", "o", " ", "o", " ", "o", " ", "o", " "],
     ]
+    @current_player = "x"
   end
 
   def board
     @board
+  end
+
+  def toggle_player(player)
+    if player == "x"
+      @current_player = "o"
+    else
+      @current_player = "x"
+    end
+    @current_player
   end
 
   def king
@@ -26,38 +37,52 @@ class Checkers
   end
 
   def move(row1, column1, row2, column2)
-    checker = @board[row1][column1]
+    if @board[row1][column1] == @current_player
+      checker = @board[row1][column1]
 
-    if @board[row1][column1] == @board[row1][column1].upcase
-      if @board[row2][column2] == " " &&
-         (row1 - row2).abs == 1 &&
-         (column1 - column2).abs == 1
-        @board[row1][column1] = " "
-        @board[row2][column2] = checker
-        @board
-      else
-        "Invalid move"
+      if @board[row1][column1] == @board[row1][column1].upcase
+        if @board[row2][column2] == " " &&
+           (row1 - row2).abs == 1 &&
+           (column1 - column2).abs == 1
+          @board[row1][column1] = " "
+          @board[row2][column2] = checker
+          # @board
+        else
+          puts
+          pp "Invalid move"
+          puts
+        end
+      elsif @board[row1][column1] == "x"
+        if @board[row2][column2] == " " &&
+           row2 - row1 == 1 &&
+           (column1 - column2).abs == 1
+          @board[row1][column1] = " "
+          @board[row2][column2] = checker
+          # @board
+        else
+          puts
+          pp "Invalid move"
+          puts
+        end
+      elsif @board[row1][column1] == "o"
+        if @board[row2][column2] == " " &&
+           row1 - row2 == 1 &&
+           (column1 - column2).abs == 1
+          @board[row1][column1] = " "
+          @board[row2][column2] = checker
+          # @board
+        else
+          puts
+          pp "Invalid move"
+          puts
+        end
       end
-    elsif @board[row1][column1] == "x"
-      if @board[row2][column2] == " " &&
-         row2 - row1 == 1 &&
-         (column1 - column2).abs == 1
-        @board[row1][column1] = " "
-        @board[row2][column2] = checker
-        @board
-      else
-        "Invalid move"
-      end
-    elsif @board[row1][column1] == "o"
-      if @board[row2][column2] == " " &&
-         row1 - row2 == 1 &&
-         (column1 - column2).abs == 1
-        @board[row1][column1] = " "
-        @board[row2][column2] = checker
-        @board
-      else
-        "Invalid move"
-      end
+      toggle_player(current_player)
+      @board
+    else
+      puts
+      pp "Invalid move"
+      puts
     end
   end
 

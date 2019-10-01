@@ -18,6 +18,15 @@ RSpec.describe "board" do
   end
 end
 
+RSpec.describe "toggle_player" do
+  it "should switch the player symbols between 'x' and 'o'" do
+    game = Checkers.new
+
+    expect(game.toggle_player("x")).to eq("o")
+    expect(game.toggle_player("o")).to eq("x")
+  end
+end
+
 RSpec.describe "king" do
   it "should crown a checker that makes it to the opposite side of the board" do
     game = Checkers.new
@@ -91,6 +100,12 @@ RSpec.describe "move" do
     game = Checkers.new
 
     expect(game.move(3, 8, 5, 6)).to eq("Invalid move")
+  end
+
+  it "should only allow player to move their own checkers" do
+    game = Checkers.new
+
+    expect(game.move(6, 1, 5, 2)).to eq("Not your piece to move!")
   end
 
   it "should only allow crowned checkers to move backwards" do

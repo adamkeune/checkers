@@ -3,7 +3,7 @@ class Checkers
 
   def initialize
     @board = [
-      [" ", "1", "2", "3", "4", "5", "6", "7", "8"],
+      ["0", "1", "2", "3", "4", "5", "6", "7", "8"],
       ["1", " ", "x", " ", "x", " ", "x", " ", "x"],
       ["2", "x", " ", "x", " ", "x", " ", "x", " "],
       ["3", " ", "x", " ", "x", " ", "x", " ", "x"],
@@ -44,7 +44,7 @@ class Checkers
           toggle_player(current_player)
           @board
         else
-          pp "Invalid move"
+          "Invalid move"
         end
       elsif @board[row1][column1] == "x"
         if @board[row2][column2] == " " &&
@@ -55,31 +55,27 @@ class Checkers
           toggle_player(current_player)
           @board
         else
-          pp "Invalid move"
+          "Invalid move"
         end
       elsif @board[row1][column1] == "o"
         if @board[row2][column2] == " " &&
            row1 - row2 == 1 &&
            (column1 - column2).abs == 1
           @board[row1][column1] = " "
-          toggle_player(current_player)
           @board[row2][column2] = checker
+          toggle_player(current_player)
           @board
         else
-          pp "Invalid move"
+          "Invalid move"
         end
       end
-      # @board
     else
-      pp "Invalid move"
+      "Invalid move"
     end
   end
 
   def jump(current_player, row1, column1, row2, column2)
-    p row1
-    p column1
-    checker = @board[row1][column1] # this isn't registering, returns " "
-    p checker # -> " "
+    checker = @board[row1][column1]
 
     jumped_row = ((row1 + row2) / 2)
     jumped_column = ((column1 + column2) / 2)
@@ -95,5 +91,8 @@ class Checkers
     else
       "Invalid jump"
     end
+  end
+
+  def multiple_jump
   end
 end

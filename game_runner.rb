@@ -21,6 +21,5 @@ while (game.board.flatten.any?("x") || game.board.flatten.any?("X")) && (game.bo
 
   game.move(row1, column1, row2, column2) if (row1 - row2).abs == 1
   game.jump(game.current_player, row1, column1, row2, column2) if (row1 - row2).abs == 2
-
-  # game.toggle_player(game.current_player)
+  # game.multiple_jump, refactor to a ternary expression?
 end

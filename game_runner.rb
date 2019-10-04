@@ -1,10 +1,9 @@
 require "./checkers"
 
 game = Checkers.new
+pp game.board
 
 while (game.board.flatten.any?("x") || game.board.flatten.any?("X")) && (game.board.flatten.any?("o") || game.board.flatten.any?("O"))
-  pp game.board
-
   puts "Player #{game.current_player}, which piece do you want to move?"
   puts "Row?"
   row1 = gets.chomp.to_i
@@ -19,7 +18,36 @@ while (game.board.flatten.any?("x") || game.board.flatten.any?("X")) && (game.bo
   puts "Column?"
   column2 = gets.chomp.to_i
 
-  game.move(row1, column1, row2, column2) if (row1 - row2).abs == 1
-  game.jump(game.current_player, row1, column1, row2, column2) if (row1 - row2).abs == 2
-  # game.multiple_jump, refactor to a ternary expression?
+  if (row1 - row2).abs == 1 && (column1 - column2).abs == 1
+    game.move(row1, column1, row2, column2)
+    pp game.king
+  elsif (row1 - row2).abs == 2 && (column1 - column2).abs == 2
+    game.jump(game.current_player, row1, column1, row2, column2)
+    pp game.king
+
+    puts "Jump again? (Y/N)"  # HOW DO I TEST THIS?
+    jump_again = gets.chomp
+
+    while jump_again.downcase == "y"
+      row1 = row2
+      puts "Row?"
+      row2 = gets.chomp.to_i
+
+      column1 = column2
+      puts "Column?"
+      column2 = gets.chomp.to_i
+
+      game.jump(game.current_player, row1, column1, row2, column2)
+      pp game.king
+
+      puts "Jump again? (Y/N)"
+      jump_again = gets.chomp
+    end
+    game.toggle_player(game.current_player)
+  else
+    pp "Invalid move"
+  end
 end
+
+puts "#{game.current_player} wins!"
+puts "Thanks for playing!"

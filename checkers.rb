@@ -86,13 +86,9 @@ class Checkers
       @board[row1][column1] = " "
       @board[jumped_row][jumped_column] = " "
       @board[row2][column2] = checker
-      toggle_player(current_player)
       @board
     else
       "Invalid jump"
     end
-  end
-
-  def multiple_jump
   end
 end

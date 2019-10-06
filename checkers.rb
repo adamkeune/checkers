@@ -79,7 +79,8 @@ class Checkers
 
     jumped_row = ((row1 + row2) / 2)
     jumped_column = ((column1 + column2) / 2)
-    if (row1 - row2).abs == 2 &&
+    if checker != " " &&
+       (row1 - row2).abs == 2 &&
        (column1 - column2).abs == 2 &&
        @board[jumped_row][jumped_column] != " " &&
        @board[jumped_row][jumped_column] != current_player
@@ -90,5 +91,13 @@ class Checkers
     else
       "Invalid jump"
     end
+  end
+
+  def computer_turn
+    # find all "o"s, save [i, j] in array
+    # filter all [i, j] for available jumps
+    # filter all [i, j] for available moves
+    # choose from filtered array
+    # return board
   end
 end

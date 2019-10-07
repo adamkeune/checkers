@@ -211,21 +211,102 @@ RSpec.describe "jump" do
     ]
     expect(game.jump("x", 3, 2, 5, 4)).to eq("Invalid jump")
   end
-
-  # it "should allow successive jumps" do
-  #   game = Checkers.new
-
-  #   game.board = [
-  #     [" ", "1", "2", "3", "4", "5", "6", "7", "8"],
-  #     ["1", " ", "x", " ", "x", " ", "x", " ", "x"],
-  #     ["2", "x", " ", "x", " ", "x", " ", "x", " "],
-  #     ["3", " ", "x", " ", " ", " ", "x", " ", "x"],
-  #     ["4", " ", " ", "o", " ", " ", " ", " ", " "],
-  #     ["5", " ", " ", " ", " ", " ", "o", " ", " "],
-  #     ["6", "o", " ", "o", " ", " ", " ", "o", " "],
-  #     ["7", " ", " ", " ", "o", " ", "o", " ", "o"],
-  #     ["8", "o", " ", " ", " ", "o", " ", "o", " "],
-  #   ]
-
-  # end
 end
+
+RSpec.describe "validate_move" do
+  it "should return true if board space exists and is occupied by current player's token" do
+    game = Checkers.new
+
+    expect(game.validate_move(3, 8, 4, 7)).to eq(true)
+    expect(game.validate_move(6, 1, 5, 2)).to eq(false)
+  end
+
+  it "should return true if second board space exists and is empty" do
+    game = Checkers.new
+
+    game.board = [
+      ["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+      ["1", " ", "O", " ", "x", " ", "x", " ", "x"],
+      ["2", " ", " ", "x", " ", "x", " ", "x", " "],
+      ["3", " ", " ", " ", " ", " ", "x", " ", "x"],
+      ["4", " ", " ", "x", " ", " ", " ", " ", " "],
+      ["5", " ", "o", " ", " ", " ", " ", " ", " "],
+      ["6", "o", " ", " ", " ", "o", " ", "o", " "],
+      ["7", " ", "o", " ", "X", " ", "o", " ", "o"],
+      ["8", "o", " ", "o", " ", " ", " ", "o", " "],
+    ]
+
+    expect(game.validate_move(4, 3, 5, 2)).to eq(false)
+  end
+
+  # add more validation
+end
+
+RSpec.describe "validate_king" do
+  it "should return true if selected piece is crowned" do
+    game = Checkers.new
+
+    game.board = [
+      ["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+      ["1", " ", "O", " ", "x", " ", "x", " ", "x"],
+      ["2", " ", " ", "x", " ", "x", " ", "x", " "],
+      ["3", " ", " ", " ", " ", " ", "x", " ", "x"],
+      ["4", " ", " ", "x", " ", " ", " ", " ", " "],
+      ["5", " ", "o", " ", " ", " ", " ", " ", " "],
+      ["6", "o", " ", " ", " ", "o", " ", "o", " "],
+      ["7", " ", "o", " ", "X", " ", "o", " ", "o"],
+      ["8", "o", " ", "o", " ", " ", " ", "o", " "],
+    ]
+
+    expect(game.validate_king(7, 4, 6, 3)).to eq(true)
+  end
+end
+
+RSpec.describe "computer_checkers" do
+  it "should return an array of board spaces containing computer's checkers" do
+    game = Checkers.new
+
+    expect(game.computer_checkers).to eq([
+      [6, 1], [6, 3], [6, 5], [6, 7],
+      [7, 2], [7, 4], [7, 6], [7, 8],
+      [8, 1], [8, 3], [8, 5], [8, 7],
+    ])
+  end
+end
+
+RSpec.describe "computer_move" do
+  it "should return a filtered array of 'o' spaces with moves available" do
+    game = Checkers.new
+    array_o = game.computer_checkers
+
+    expect(game.computer_move(array_o)).to eq([
+      [6, 1], [6, 3], [6, 5], [6, 7],
+    ])
+  end
+end
+
+RSpec.describe "computer_jump" do
+  it "should return a filtered array of 'o' spaces with jumps available" do
+    game = Checkers.new
+    game.board = [
+      ["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+      ["1", " ", " ", " ", "x", " ", "x", " ", "x"],
+      ["2", " ", " ", "x", " ", "x", " ", "x", " "],
+      ["3", " ", " ", " ", " ", " ", " ", " ", "x"],
+      ["4", " ", " ", "x", " ", " ", " ", " ", " "],
+      ["5", " ", "o", " ", " ", " ", "x", " ", " "],
+      ["6", "o", " ", " ", " ", "o", " ", "o", " "],
+      ["7", " ", "o", " ", " ", " ", "o", " ", "o"],
+      ["8", "o", " ", "o", " ", "X", " ", "o", " "],
+    ]
+    array_o = game.computer_checkers
+
+    expect(game.computer_jump(array_o)).to eq([
+      [5, 2], [6, 5], [6, 7],
+    ])
+  end
+end
+
+# RSpec.describe "computer_turn" do
+
+# end

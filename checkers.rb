@@ -37,8 +37,7 @@ class Checkers
   end
 
   def validate_move(row1, column1, row2, column2)
-    (@board[row1][column1]) &&
-    (@board[row1][column1] == current_player) &&
+    (@board[row1][column1].downcase == current_player) &&
     (@board[row2][column2] == " ")
   end
 
@@ -46,16 +45,14 @@ class Checkers
     jumped_row = (row1 + row2) / 2
     jumped_column = (column1 + column2) / 2
 
-    @board[row1][column1] &&
-    @board[row1][column1] == current_player &&
+    @board[row1][column1].downcase == current_player &&
     @board[row2][column2] == " " &&
     @board[jumped_row][jumped_column] == toggle_player(current_player)
   end
 
-  def move(row1, column1, row2, column2)
+  def move(row1, column1, row2, column2) # refactor to != and DRY
+    checker = @board[row1][column1]
     if validate_king(row1, column1, row2, column2)
-      checker = @board[row1][column1]
-
       if (row1 - row2).abs == 1 &&
          (column1 - column2).abs == 1
         @board[row1][column1] = " "
@@ -66,8 +63,6 @@ class Checkers
         "Invalid move"
       end
     elsif validate_move(row1, column1, row2, column2)
-      checker = @board[row1][column1]
-
       if checker == "x"
         if row2 - row1 == 1 &&
            (column1 - column2).abs == 1
@@ -94,14 +89,14 @@ class Checkers
     end
   end
 
-  def jump(row1, column1, row2, column2) # add validate_king
-    if validate_jump(row1, column1, row2, column2)
-      checker = @board[row1][column1]
+  def jump(row1, column1, row2, column2) # refactor to != and DRY
+    checker = @board[row1][column1]
+    jumped_row = ((row1 + row2) / 2)
+    jumped_column = ((column1 + column2) / 2)
+    jumped_space = @board[jumped_row][jumped_column]
 
-      jumped_row = ((row1 + row2) / 2)
-      jumped_column = ((column1 + column2) / 2)
-      jumped_space = @board[jumped_row][jumped_column]
-
+    if validate_king(row1, column1, row2, column2) &&
+       validate_jump(row1, column1, row2, column2)
       if (row1 - row2).abs == 2 &&
          (column1 - column2).abs == 2
         @board[row1][column1] = " "
@@ -110,6 +105,28 @@ class Checkers
         @board
       else
         "Invalid jump"
+      end
+    elsif validate_jump(row1, column1, row2, column2)
+      if checker == "x"
+        if row2 - row1 == 2 &&
+           (column1 - column2).abs == 2
+          @board[row1][column1] = " "
+          @board[jumped_row][jumped_column] = " "
+          @board[row2][column2] = checker
+          @board
+        else
+          "Invalid jump"
+        end
+      elsif checker == "o"
+        if row1 - row2 == 2 &&
+           (column1 - column2).abs == 2
+          @board[row1][column1] = " "
+          @board[jumped_row][jumped_column] = " "
+          @board[row2][column2] = checker
+          @board
+        else
+          "Invalid jump"
+        end
       end
     else
       "Invalid jump"

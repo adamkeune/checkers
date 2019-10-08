@@ -37,8 +37,19 @@ class Checkers
   end
 
   def validate_move(row1, column1, row2, column2)
-    (@board[row1][column1]) && (@board[row1][column1] == current_player) &&
-      (@board[row2][column2] == " ")
+    (@board[row1][column1]) &&
+    (@board[row1][column1] == current_player) &&
+    (@board[row2][column2] == " ")
+  end
+
+  def validate_jump(row1, column1, row2, column2)
+    jumped_row = (row1 + row2) / 2
+    jumped_column = (column1 + column2) / 2
+
+    @board[row1][column1] &&
+    @board[row1][column1] == current_player &&
+    @board[row2][column2] == " " &&
+    @board[jumped_row][jumped_column] == toggle_player(current_player)
   end
 
   def move(row1, column1, row2, column2)
@@ -83,23 +94,23 @@ class Checkers
     end
   end
 
-  def jump(current_player, row1, column1, row2, column2)
-    checker = @board[row1][column1]
+  def jump(row1, column1, row2, column2) # add validate_king
+    if validate_jump(row1, column1, row2, column2)
+      checker = @board[row1][column1]
 
-    jumped_row = ((row1 + row2) / 2)
-    jumped_column = ((column1 + column2) / 2)
-    jumped_space = @board[jumped_row][jumped_column]
+      jumped_row = ((row1 + row2) / 2)
+      jumped_column = ((column1 + column2) / 2)
+      jumped_space = @board[jumped_row][jumped_column]
 
-    if checker != " " &&
-       @board[row2][column2] == " " &&
-       (row1 - row2).abs == 2 &&
-       (column1 - column2).abs == 2 &&
-       jumped_space != " " &&
-       jumped_space != current_player
-      @board[row1][column1] = " "
-      @board[jumped_row][jumped_column] = " "
-      @board[row2][column2] = checker
-      @board
+      if (row1 - row2).abs == 2 &&
+         (column1 - column2).abs == 2
+        @board[row1][column1] = " "
+        @board[jumped_row][jumped_column] = " "
+        @board[row2][column2] = checker
+        @board
+      else
+        "Invalid jump"
+      end
     else
       "Invalid jump"
     end
@@ -140,7 +151,7 @@ class Checkers
   end
 
   def computer_turn
-    # split into separate functions
+    # split into separate functions?
     # find all "o"s, save [i, j] in array
     # filter all [i, j] for available jumps
     # filter all [i, j] for available moves
@@ -150,9 +161,11 @@ class Checkers
     moves_array = computer_moves(computer_checkers)
 
     if jumps_array.length > 0
-      jump(current_player, jumps_array[0][0], jumps_array[0][1], (jumps_array[0][0] - 2), (jumps_array[0][1] - 2))
+      jump(jumps_array[0][0], jumps_array[0][1], (jumps_array[0][0] - 2), (jumps_array[0][1] - 2))
     else
       move(moves_array[0][0], moves_array[0][1], (moves_array[0][0] - 1), (moves_array[0][1] + 1))
     end
+
+    # add king validation, option choices
   end
 end

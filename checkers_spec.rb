@@ -182,7 +182,7 @@ RSpec.describe "jump" do
       ["7", " ", "o", " ", "o", " ", "o", " ", "o"],
       ["8", "o", " ", "o", " ", "o", " ", "o", " "],
     ]
-    expect(game.jump("x", 4, 3, 6, 5)).to eq([
+    expect(game.jump(4, 3, 6, 5)).to eq([
       ["0", "1", "2", "3", "4", "5", "6", "7", "8"],
       ["1", " ", "x", " ", "x", " ", "x", " ", "x"],
       ["2", "x", " ", "x", " ", "x", " ", "x", " "],
@@ -209,19 +209,34 @@ RSpec.describe "jump" do
       ["7", " ", "o", " ", "o", " ", "o", " ", "o"],
       ["8", "o", " ", "o", " ", "o", " ", "o", " "],
     ]
-    expect(game.jump("x", 3, 2, 5, 4)).to eq("Invalid jump")
+    expect(game.jump(3, 2, 5, 4)).to eq("Invalid jump")
   end
+
+  it "should not allow player to jump empty space" do
+    game = Checkers.new
+
+    expect(game.jump(3, 8, 5, 6)).to eq("Invalid jump")
+  end
+
+  # add king validation
+
 end
 
 RSpec.describe "validate_move" do
-  it "should return true if board space exists and is occupied by current player's token" do
+  it "should return true if first board space exists" do
     game = Checkers.new
 
     expect(game.validate_move(3, 8, 4, 7)).to eq(true)
+  end
+
+  it "should return false if first board space is not occupied by current player's token" do
+    game = Checkers.new
+
+    expect(game.validate_move(4, 1, 5, 2)).to eq(false)
     expect(game.validate_move(6, 1, 5, 2)).to eq(false)
   end
 
-  it "should return true if second board space exists and is empty" do
+  it "should return false if second board space is not empty" do
     game = Checkers.new
 
     game.board = [
@@ -257,6 +272,72 @@ RSpec.describe "validate_king" do
     ]
 
     expect(game.validate_king(7, 4, 6, 3)).to eq(true)
+  end
+end
+
+RSpec.describe "validate_jump" do
+  it "should return true if first board space exists" do
+    game = Checkers.new
+    game.board = [
+      ["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+      ["1", " ", "O", " ", "x", " ", "x", " ", "x"],
+      ["2", " ", " ", "x", " ", "x", " ", "x", " "],
+      ["3", " ", " ", " ", " ", " ", "x", " ", "x"],
+      ["4", "x", " ", " ", " ", " ", " ", " ", " "],
+      ["5", " ", "o", " ", " ", " ", " ", " ", " "],
+      ["6", "o", " ", " ", " ", "o", " ", "o", " "],
+      ["7", " ", "o", " ", "X", " ", "o", " ", "o"],
+      ["8", "o", " ", "o", " ", " ", " ", "o", " "],
+    ]
+
+    expect(game.validate_jump(4, 1, 6, 3)).to eq(true)
+  end
+
+  it "should return false if first board space exists but is occupied by opponent's token" do
+    game = Checkers.new
+
+    expect(game.validate_jump(6, 1, 4, 3)).to eq(false)
+  end
+
+  it "should return false if second board space does not exist" do
+    game = Checkers.new
+
+    expect(game.validate_jump(1, 8, 2, 10)).to eq(false)
+  end
+
+  it "should return false if second board space is not empty" do
+    game = Checkers.new
+    game.board = [
+      ["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+      ["1", " ", "O", " ", "x", " ", "x", " ", "x"],
+      ["2", " ", " ", "x", " ", "x", " ", "x", " "],
+      ["3", " ", " ", " ", " ", " ", "x", " ", "x"],
+      ["4", " ", " ", "x", " ", " ", " ", " ", " "],
+      ["5", " ", "o", " ", " ", " ", " ", " ", " "],
+      ["6", "o", " ", " ", " ", "o", " ", "o", " "],
+      ["7", " ", "o", " ", "X", " ", "o", " ", "o"],
+      ["8", "o", " ", "o", " ", " ", " ", "o", " "],
+    ]
+
+    expect(game.validate_jump(4, 3, 6, 1)).to eq(false)
+  end
+
+  it "should return false if the jumped space is not occupied by opponent's checker" do
+    game = Checkers.new
+    game.current_player = "o"
+    game.board = [
+      ["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+      ["1", " ", "O", " ", "x", " ", "x", " ", "x"],
+      ["2", " ", " ", "x", " ", "x", " ", "x", " "],
+      ["3", " ", "x", " ", " ", " ", "x", " ", "x"],
+      ["4", " ", " ", " ", " ", " ", " ", " ", " "],
+      ["5", " ", "o", " ", " ", " ", " ", " ", " "],
+      ["6", "o", " ", " ", " ", "o", " ", "o", " "],
+      ["7", " ", "o", " ", "X", " ", "o", " ", "o"],
+      ["8", "o", " ", "o", " ", " ", " ", "o", " "],
+    ]
+
+    expect(game.validate_jump(6, 1, 4, 3)).to eq(false)
   end
 end
 
@@ -351,4 +432,12 @@ RSpec.describe "computer_turn" do
       ["8", "o", " ", "o", " ", "o", " ", "o", " "],
     ])
   end
+
+  # it "should allow the computer to move backwards if checker is crowned" do
+  #   game = Checkers.new
+  # end
+
+  # it "should allow the computer to jump backwards if checker is crowned" do
+  #   game = Checkers.new
+  # end
 end

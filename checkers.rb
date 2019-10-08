@@ -119,7 +119,7 @@ class Checkers
     array_o
   end
 
-  def computer_move(arr)
+  def computer_moves(arr)
     arr.filter do |space|
       k = space[0]
       l = space[1]
@@ -128,7 +128,7 @@ class Checkers
     end
   end
 
-  def computer_jump(arr)
+  def computer_jumps(arr)
     arr.filter do |space|
       k = space[0]
       l = space[1]
@@ -139,11 +139,20 @@ class Checkers
     end
   end
 
-  def computer_turn # split into separate functions
+  def computer_turn
+    # split into separate functions
     # find all "o"s, save [i, j] in array
     # filter all [i, j] for available jumps
     # filter all [i, j] for available moves
     # choose from filtered array
     # call 'move' or 'jump', return board
+    jumps_array = computer_jumps(computer_checkers)
+    moves_array = computer_moves(computer_checkers)
+
+    if jumps_array.length > 0
+      jump(current_player, jumps_array[0][0], jumps_array[0][1], (jumps_array[0][0] - 2), (jumps_array[0][1] - 2))
+    else
+      move(moves_array[0][0], moves_array[0][1], (moves_array[0][0] - 1), (moves_array[0][1] + 1))
+    end
   end
 end

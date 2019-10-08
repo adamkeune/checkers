@@ -238,8 +238,6 @@ RSpec.describe "validate_move" do
 
     expect(game.validate_move(4, 3, 5, 2)).to eq(false)
   end
-
-  # add more validation
 end
 
 RSpec.describe "validate_king" do
@@ -274,18 +272,18 @@ RSpec.describe "computer_checkers" do
   end
 end
 
-RSpec.describe "computer_move" do
+RSpec.describe "computer_moves" do
   it "should return a filtered array of 'o' spaces with moves available" do
     game = Checkers.new
     array_o = game.computer_checkers
 
-    expect(game.computer_move(array_o)).to eq([
+    expect(game.computer_moves(array_o)).to eq([
       [6, 1], [6, 3], [6, 5], [6, 7],
     ])
   end
 end
 
-RSpec.describe "computer_jump" do
+RSpec.describe "computer_jumps" do
   it "should return a filtered array of 'o' spaces with jumps available" do
     game = Checkers.new
     game.board = [
@@ -301,12 +299,56 @@ RSpec.describe "computer_jump" do
     ]
     array_o = game.computer_checkers
 
-    expect(game.computer_jump(array_o)).to eq([
+    expect(game.computer_jumps(array_o)).to eq([
       [5, 2], [6, 5], [6, 7],
     ])
   end
 end
 
-# RSpec.describe "computer_turn" do
+RSpec.describe "computer_turn" do
+  it "should take first available jump" do
+    game = Checkers.new
 
-# end
+    game.current_player = "o"
+    game.board = [
+      ["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+      ["1", " ", "x", " ", "x", " ", "x", " ", "x"],
+      ["2", "x", " ", "x", " ", "x", " ", "x", " "],
+      ["3", " ", " ", " ", "x", " ", "x", " ", "x"],
+      ["4", " ", " ", "x", " ", " ", " ", " ", " "],
+      ["5", " ", " ", " ", "o", " ", " ", " ", " "],
+      ["6", "o", " ", " ", " ", "o", " ", "o", " "],
+      ["7", " ", "o", " ", "o", " ", "o", " ", "o"],
+      ["8", "o", " ", "o", " ", "o", " ", "o", " "],
+    ]
+
+    expect(game.computer_turn).to eq([
+      ["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+      ["1", " ", "x", " ", "x", " ", "x", " ", "x"],
+      ["2", "x", " ", "x", " ", "x", " ", "x", " "],
+      ["3", " ", "o", " ", "x", " ", "x", " ", "x"],
+      ["4", " ", " ", " ", " ", " ", " ", " ", " "],
+      ["5", " ", " ", " ", " ", " ", " ", " ", " "],
+      ["6", "o", " ", " ", " ", "o", " ", "o", " "],
+      ["7", " ", "o", " ", "o", " ", "o", " ", "o"],
+      ["8", "o", " ", "o", " ", "o", " ", "o", " "],
+    ])
+  end
+
+  it "should take first available move if no jumps available" do
+    game = Checkers.new
+    game.current_player = "o"
+
+    expect(game.computer_turn).to eq([
+      ["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+      ["1", " ", "x", " ", "x", " ", "x", " ", "x"],
+      ["2", "x", " ", "x", " ", "x", " ", "x", " "],
+      ["3", " ", "x", " ", "x", " ", "x", " ", "x"],
+      ["4", " ", " ", " ", " ", " ", " ", " ", " "],
+      ["5", " ", "o", " ", " ", " ", " ", " ", " "],
+      ["6", " ", " ", "o", " ", "o", " ", "o", " "],
+      ["7", " ", "o", " ", "o", " ", "o", " ", "o"],
+      ["8", "o", " ", "o", " ", "o", " ", "o", " "],
+    ])
+  end
+end

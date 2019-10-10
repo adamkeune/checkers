@@ -158,27 +158,37 @@ class Checkers
     arr.select do |space|
       k = space[0]
       l = space[1]
-      @board[k - 1][l + 1] == " " ||
-      @board[k - 1][l - 1] == " "
+      if @board[k][l].upcase == @board[k][l]
+        @board[k - 1][l + 1] == " " ||
+        @board[k - 1][l - 1] == " " ||
+        @board[k + 1][l + 1] ||
+        @board[k + 1][l - 1]
+      else
+        @board[k - 1][l + 1] == " " ||
+        @board[k - 1][l - 1] == " "
+      end
     end
   end
 
-  def computer_jumps(arr) # also return empty spaces to be jumped to
-    # Add "kings"
+  def computer_jumps(arr)
     arr.select do |space|
       k = space[0]
       l = space[1]
-      # FIRST TWO CONDITIONS WORK
-      # if @board[k+1] or @board[k+2]
-      ((@board[k - 1][l + 1] == "x" || @board[k - 1][l + 1] == "X") &&
-       @board[k - 2][l + 2] == " ") ||
-      ((@board[k - 1][l - 1] == "x" || @board[k - 1][l - 1] == "X") &&
-       @board[k - 2][l - 2] == " ")
-      # SECOND TWO CONDITIONS GIVE 'NIL'
-      # ((@board[k + 1][l + 1] == "x" || @board[k + 1][l + 1] == "X") &&
-      #  @board[k + 2][l + 2] == " ") ||
-      # ((@board[k + 1][l - 1] == "x" || @board[k + 1][l - 1] == "X") &&
-      #  @board[k + 2][l - 2] == " ")
+      if @board[k + 1] && @board[k + 2]
+        ((@board[k - 1][l + 1] == "x" || @board[k - 1][l + 1] == "X") &&
+         @board[k - 2][l + 2] == " ") ||
+          ((@board[k - 1][l - 1] == "x" || @board[k - 1][l - 1] == "X") &&
+           @board[k - 2][l - 2] == " ") ||
+          ((@board[k + 1][l + 1] == "x" || @board[k + 1][l + 1] == "X") &&
+           @board[k + 2][l + 2] == " ") ||
+          ((@board[k + 1][l - 1] == "x" || @board[k + 1][l - 1] == "X") &&
+           @board[k + 2][l - 2] == " ")
+      else
+        ((@board[k - 1][l + 1] == "x" || @board[k - 1][l + 1] == "X") &&
+         @board[k - 2][l + 2] == " ") ||
+          ((@board[k - 1][l - 1] == "x" || @board[k - 1][l - 1] == "X") &&
+           @board[k - 2][l - 2] == " ")
+      end
     end
   end
 

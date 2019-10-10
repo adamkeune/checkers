@@ -387,6 +387,26 @@ RSpec.describe "computer_moves" do
       [6, 1], [6, 3], [6, 5], [6, 7],
     ])
   end
+
+  it "should include crowned checkers that have available backward moves" do
+    game = Checkers.new
+    game.board = [
+      ["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+      ["1", " ", "O", " ", "x", " ", "x", " ", "x"],
+      ["2", " ", " ", " ", " ", "x", " ", "x", " "],
+      ["3", " ", " ", " ", " ", " ", "x", " ", "x"],
+      ["4", " ", " ", " ", " ", " ", " ", " ", " "],
+      ["5", " ", "o", " ", " ", " ", " ", " ", " "],
+      ["6", "o", " ", " ", " ", "o", " ", "o", " "],
+      ["7", " ", "o", " ", "X", " ", "o", " ", "o"],
+      ["8", "o", " ", "o", " ", " ", " ", "o", " "],
+    ]
+    array_o = game.computer_checkers
+
+    expect(game.computer_moves(array_o)).to eq([
+      [1, 2], [5, 2], [6, 5], [6, 7], [7, 2],
+    ])
+  end
 end
 
 RSpec.describe "computer_jumps" do

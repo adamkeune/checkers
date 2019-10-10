@@ -64,7 +64,7 @@ class Checkers
          (column1 - column2).abs == 1
         @board[row1][column1] = " "
         @board[row2][column2] = checker
-        toggle_player(current_player)
+        # toggle_player(current_player)
         @board
       else
         "Invalid move"
@@ -75,7 +75,7 @@ class Checkers
            (column1 - column2).abs == 1
           @board[row1][column1] = " "
           @board[row2][column2] = checker
-          toggle_player(current_player)
+          # toggle_player(current_player)
           @board
         else
           "Invalid move"
@@ -85,7 +85,7 @@ class Checkers
            (column1 - column2).abs == 1
           @board[row1][column1] = " "
           @board[row2][column2] = checker
-          toggle_player(current_player)
+          # toggle_player(current_player)
           @board
         else
           "Invalid move"
@@ -199,7 +199,7 @@ class Checkers
     if jumps_array.length > 0 # add decision logic, which way to jump/move? (if both available, random, else go whichever way is available)
       row = jumps_array[0][0]
       column = jumps_array[0][1]
-      pp jumps_array
+      # pp jumps_array
       # pp current_player
       # pp toggle_player(current_player)
 
@@ -228,7 +228,20 @@ class Checkers
     else
       # x = moves_array.length
       # random = rand(0...x)
-      move(moves_array[0][0], moves_array[0][1], (moves_array[0][0] - 1), (moves_array[0][1] + 1))
+      row = moves_array[0][0]
+      column = moves_array[0][1]
+      if @board[row][column] == @board[row][column].upcase &&
+         @board[row + 1][column + 1] == " "
+        move(row, column, (row + 1), (column + 1))
+      elsif @board[row][column] == @board[row][column].upcase &&
+            @board[row + 1][column - 1] == " "
+        move(row, column, (row + 1), (column - 1))
+      elsif @board[row - 1][column + 1] == " "
+        move(row, column, (row - 1), (column + 1))
+      else
+        move(row, column, (row - 1), (column - 1))
+      end
+      # move(moves_array[0][0], moves_array[0][1], (moves_array[0][0] - 1), (moves_array[0][1] + 1))
     end
     # toggle_player(current_player)
     # @board

@@ -22,8 +22,9 @@ if answer == "1"
       puts "Column?"
       column2 = gets.chomp.to_i
 
-      if game.validte_move(row1, column1, row2, column2) # (row1 - row2).abs == 1 && (column1 - column2).abs == 1 # added to validate_move
+      if game.validate_move(row1, column1, row2, column2) # (row1 - row2).abs == 1 && (column1 - column2).abs == 1 # added to validate_move
         game.move(row1, column1, row2, column2)
+        game.toggle_player(game.current_player)
         pp game.king
       elsif game.validate_jump(row1, column1, row2, column2) # (row1 - row2).abs == 2 && (column1 - column2).abs == 2 # added to validate_jump
         loop do
@@ -42,6 +43,7 @@ if answer == "1"
             puts "Column?"
             column2 = gets.chomp.to_i
           else
+            game.toggle_player(game.current_player)
             break
           end
         end
@@ -53,7 +55,7 @@ if answer == "1"
         puts "You win!"
         break
       else
-        game.toggle_player(game.current_player)
+        pp game.current_player
       end
     else
       game.computer_turn

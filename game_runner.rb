@@ -5,10 +5,74 @@ puts "How many players? (1 or 2)"
 answer = gets.chomp
 
 if answer == "1"
+  while true
+    pp game.board
+    if game.current_player == "x"
+      puts "Player #{game.current_player}, which piece do you want to move?"
+      puts "Row?"
+      row1 = gets.chomp.to_i
+
+      puts "Column?"
+      column1 = gets.chomp.to_i
+
+      puts "Move this piece to where?"
+      puts "Row?"
+      row2 = gets.chomp.to_i
+
+      puts "Column?"
+      column2 = gets.chomp.to_i
+
+      if game.validte_move(row1, column1, row2, column2) # (row1 - row2).abs == 1 && (column1 - column2).abs == 1 # added to validate_move
+        game.move(row1, column1, row2, column2)
+        pp game.king
+      elsif game.validate_jump(row1, column1, row2, column2) # (row1 - row2).abs == 2 && (column1 - column2).abs == 2 # added to validate_jump
+        loop do
+          game.jump(row1, column1, row2, column2)
+          pp game.king
+
+          puts "Jump again? (Y/N)"
+          jump_again = gets.chomp
+
+          if jump_again.downcase == "y"
+            row1 = row2
+            puts "Row?"
+            row2 = gets.chomp.to_i
+
+            column1 = column2
+            puts "Column?"
+            column2 = gets.chomp.to_i
+          else
+            break
+          end
+        end
+      else
+        pp "Invalid move"
+      end
+
+      if !(game.board.flatten.any?("o") || game.board.flatten.any?("O"))
+        puts "You win!"
+        break
+      else
+        game.toggle_player(game.current_player)
+      end
+    else
+      game.computer_turn
+      pp game.king
+
+      if !(game.board.flatten.any?("x") || game.board.flatten.any?("X"))
+        puts "I win!"
+        break
+      else
+        game.toggle_player(game.current_player)
+      end
+    end
+  end
+  puts "Thanks for playing!"
 elsif answer == "2"
   pp game.board
 
   while (game.board.flatten.any?("x") || game.board.flatten.any?("X")) && (game.board.flatten.any?("o") || game.board.flatten.any?("O"))
+    # write method to check board for both tokens
     puts "Player #{game.current_player}, which piece do you want to move?"
     puts "Row?"
     row1 = gets.chomp.to_i
@@ -23,12 +87,12 @@ elsif answer == "2"
     puts "Column?"
     column2 = gets.chomp.to_i
 
-    if (row1 - row2).abs == 1 && (column1 - column2).abs == 1
+    if game.validate_move(row1, column1, row2, column2) # (row1 - row2).abs == 1 && (column1 - column2).abs == 1
       game.move(row1, column1, row2, column2)
       pp game.king
-    elsif (row1 - row2).abs == 2 && (column1 - column2).abs == 2
+    elsif game.validate_jump(row1, column1, row2, column2) # (row1 - row2).abs == 2 && (column1 - column2).abs == 2
       loop do
-        game.jump(game.current_player, row1, column1, row2, column2)
+        game.jump(row1, column1, row2, column2)
         pp game.king
 
         puts "Jump again? (Y/N)"
@@ -36,11 +100,11 @@ elsif answer == "2"
 
         if jump_again.downcase == "y"
           row1 = row2
-          puts "Row?"
+          puts "Jump to which row?"
           row2 = gets.chomp.to_i
 
           column1 = column2
-          puts "Column?"
+          puts "Jump to which column?"
           column2 = gets.chomp.to_i
         else
           break
@@ -52,8 +116,10 @@ elsif answer == "2"
     end
   end
 
-  puts "#{game.current_player} wins!"
+  puts "Player #{game.current_player} loses!"
+  game.toggle_player(game.current_player)
+  puts "Player #{game.current_player} wins!"
   puts "Thanks for playing!"
 else
-  puts "Ivalid number"
+  puts "Invalid entry"
 end

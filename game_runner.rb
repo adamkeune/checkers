@@ -27,10 +27,9 @@ if answer == "1"
         game.toggle_player(game.current_player)
         pp game.king
       elsif game.validate_jump(row1, column1, row2, column2)
-        # Next two lines: in or out of loop?
-        game.jump(row1, column1, row2, column2)
-        pp game.king
         loop do
+          game.jump(row1, column1, row2, column2)
+          pp game.king
           puts "Jump again? (Y/N)"
           jump_again = gets.chomp
 
@@ -89,10 +88,11 @@ elsif answer == "2"
     puts "Column?"
     column2 = gets.chomp.to_i
 
-    if game.validate_move(row1, column1, row2, column2) # (row1 - row2).abs == 1 && (column1 - column2).abs == 1
+    if game.validate_move(row1, column1, row2, column2)
       game.move(row1, column1, row2, column2)
       pp game.king
-    elsif game.validate_jump(row1, column1, row2, column2) # (row1 - row2).abs == 2 && (column1 - column2).abs == 2
+      game.toggle_player(game.current_player)
+    elsif game.validate_jump(row1, column1, row2, column2)
       loop do
         game.jump(row1, column1, row2, column2)
         pp game.king

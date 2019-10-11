@@ -49,7 +49,6 @@ class Checkers
 
     @board[row1][column1].downcase == current_player &&
     @board[row2][column2] == " " &&
-      # @board[jumped_row][jumped_column] == toggle_player(current_player)
     @board[jumped_row][jumped_column] != current_player &&
     @board[jumped_row][jumped_column] != current_player.upcase &&
     @board[jumped_row][jumped_column] != " " &&
@@ -140,7 +139,7 @@ class Checkers
   def computer_checkers
     array_o = []
     i = 0
-    while i < @board.length # refactor to .map, check documentation
+    while i < @board.length # refactor to .map
       j = 0
       while j < @board[i].length
         array_o << [i, j] if @board[i][j].downcase == "o"
@@ -194,44 +193,42 @@ class Checkers
   def computer_turn
     jumps_array = computer_jumps(computer_checkers)
     moves_array = computer_moves(computer_checkers)
-    # pp jumps_array
-    # pp moves_array
 
     if jumps_array.length > 0
-      # while true loop?
-      row = jumps_array[0][0]
-      column = jumps_array[0][1]
+      while true
+        row = jumps_array[0][0]
+        column = jumps_array[0][1]
 
-      # write 'validate_jump' method specifically for 1-player, add king validation
+        if @board[row][column] == @board[row][column].upcase &&
+           @board[row + 2][column - 2] == " " &&
+           (@board[row + 1][column - 1] == "x" ||
+            @board[row + 1][column - 1] == "X")
+          jump(row, column, (row + 2), (column - 2))
+          jumper = [row + 2, column - 2]
+        elsif @board[row][column] == @board[row][column].upcase &&
+              @board[row + 2][column + 2] == " " &&
+              (@board[row + 1][column + 1] == "x" ||
+               @board[row + 1][column - 1] == "X")
+          jump(row, column, (row + 2), (column + 2))
+          jumper = [row + 2, column + 2]
+        elsif @board[row - 2][column - 2] == " " &&
+              (@board[row - 1][column - 1] == "x" ||
+               @board[row - 1][column - 1] == "X")
+          jump(row, column, (row - 2), (column - 2))
+          jumper = [row - 2, column - 2]
+        elsif @board[row - 2][column + 2] == " " &&
+              (@board[row - 1][column + 1] == "x" ||
+               @board[row - 1][column + 1] == "X")
+          jump(row, column, (row - 2), (column + 2))
+          jumper = [row - 2, column + 2]
+        end
 
-      if @board[row][column] == @board[row][column].upcase &&
-         @board[row + 2][column - 2] == " " &&
-         (@board[row + 1][column - 1] == "x" ||
-          @board[row + 1][column - 1] == "X")
-        jump(row, column, (row + 2), (column - 2))
-      elsif @board[row][column] == @board[row][column].upcase &&
-            @board[row + 2][column + 2] == " " &&
-            (@board[row + 1][column + 1] == "x" ||
-             @board[row + 1][column - 1] == "X")
-        jump(row, column, (row + 2), (column + 2))
-      elsif @board[row - 2][column - 2] == " " &&
-            (@board[row - 1][column - 1] == "x" ||
-             @board[row - 1][column - 1] == "X")
-        jump(row, column, (row - 2), (column - 2))
-      elsif @board[row - 2][column + 2] == " " &&
-            (@board[row - 1][column + 1] == "x" ||
-             @board[row - 1][column + 1] == "X")
-        jump(row, column, (row - 2), (column + 2))
+        jumps_array = computer_jumps(computer_checkers)
+        if jumps_array[0] != jumper
+          return @board
+        end
       end
-
-      # recreate jumps_array
-      # compare first index of new array with ending space of last jump
-      # if the two match, rerun if/elsif block
-
-      # pp @board
     else
-      # x = moves_array.length
-      # random = rand(0...x)
       row = moves_array[0][0]
       column = moves_array[0][1]
       if @board[row + 1]

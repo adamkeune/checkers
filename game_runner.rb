@@ -57,7 +57,7 @@ if answer == "1"
       end
     else
       puts "My turn!"
-      game.computer_turn # TODO: add multiple jumps for computer
+      game.computer_turn
       pp game.king
 
       if !(game.board.flatten.any?("x") || game.board.flatten.any?("X"))

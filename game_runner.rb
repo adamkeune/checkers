@@ -73,7 +73,6 @@ elsif answer == "2"
   pp game.board
 
   while (game.board.flatten.any?("x") || game.board.flatten.any?("X")) && (game.board.flatten.any?("o") || game.board.flatten.any?("O"))
-    # write method to check board for both tokens
     puts "Player #{game.current_player}, which piece do you want to move?"
     puts "Row?"
     row1 = gets.chomp.to_i

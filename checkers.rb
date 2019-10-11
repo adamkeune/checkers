@@ -64,7 +64,6 @@ class Checkers
          (column1 - column2).abs == 1
         @board[row1][column1] = " "
         @board[row2][column2] = checker
-        # toggle_player(current_player)
         @board
       else
         "Invalid move"
@@ -75,7 +74,6 @@ class Checkers
            (column1 - column2).abs == 1
           @board[row1][column1] = " "
           @board[row2][column2] = checker
-          # toggle_player(current_player)
           @board
         else
           "Invalid move"
@@ -85,7 +83,6 @@ class Checkers
            (column1 - column2).abs == 1
           @board[row1][column1] = " "
           @board[row2][column2] = checker
-          # toggle_player(current_player)
           @board
         else
           "Invalid move"
@@ -154,7 +151,7 @@ class Checkers
     array_o
   end
 
-  def computer_moves(arr) # also return empty spaces available to be moved into, ".to_a"?
+  def computer_moves(arr)
     arr.select do |space|
       k = space[0]
       l = space[1]
@@ -174,7 +171,9 @@ class Checkers
     arr.select do |space|
       k = space[0]
       l = space[1]
-      if @board[k + 1] && @board[k + 2]
+      if @board[k + 1] &&
+         @board[k + 2] &&
+         @board[k][l].upcase == @board[k][l]
         ((@board[k - 1][l + 1] == "x" || @board[k - 1][l + 1] == "X") &&
          @board[k - 2][l + 2] == " ") ||
           ((@board[k - 1][l - 1] == "x" || @board[k - 1][l - 1] == "X") &&
@@ -195,13 +194,13 @@ class Checkers
   def computer_turn
     jumps_array = computer_jumps(computer_checkers)
     moves_array = computer_moves(computer_checkers)
+    # pp jumps_array
+    # pp moves_array
 
-    if jumps_array.length > 0 # add decision logic, which way to jump/move? (if both available, random, else go whichever way is available)
+    if jumps_array.length > 0
+      # while true loop?
       row = jumps_array[0][0]
       column = jumps_array[0][1]
-      # pp jumps_array
-      # pp current_player
-      # pp toggle_player(current_player)
 
       # write 'validate_jump' method specifically for 1-player, add king validation
 
@@ -224,26 +223,34 @@ class Checkers
              @board[row - 1][column + 1] == "X")
         jump(row, column, (row - 2), (column + 2))
       end
-      pp @board
+
+      # recreate jumps_array
+      # compare first index of new array with ending space of last jump
+      # if the two match, rerun if/elsif block
+
+      # pp @board
     else
       # x = moves_array.length
       # random = rand(0...x)
       row = moves_array[0][0]
       column = moves_array[0][1]
-      if @board[row][column] == @board[row][column].upcase &&
-         @board[row + 1][column + 1] == " "
-        move(row, column, (row + 1), (column + 1))
-      elsif @board[row][column] == @board[row][column].upcase &&
-            @board[row + 1][column - 1] == " "
-        move(row, column, (row + 1), (column - 1))
+      if @board[row + 1]
+        if @board[row][column] == @board[row][column].upcase &&
+           @board[row + 1][column + 1] == " "
+          move(row, column, (row + 1), (column + 1))
+        elsif @board[row][column] == @board[row][column].upcase &&
+              @board[row + 1][column - 1] == " "
+          move(row, column, (row + 1), (column - 1))
+        elsif @board[row - 1][column + 1] == " "
+          move(row, column, (row - 1), (column + 1))
+        else
+          move(row, column, (row - 1), (column - 1))
+        end
       elsif @board[row - 1][column + 1] == " "
         move(row, column, (row - 1), (column + 1))
       else
         move(row, column, (row - 1), (column - 1))
       end
-      # move(moves_array[0][0], moves_array[0][1], (moves_array[0][0] - 1), (moves_array[0][1] + 1))
     end
-    # toggle_player(current_player)
-    # @board
   end
 end

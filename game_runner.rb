@@ -5,8 +5,8 @@ puts "How many players? (1 or 2)"
 answer = gets.chomp
 
 if answer == "1"
+  pp game.board
   while true
-    pp game.board
     if game.current_player == "x"
       puts "Player #{game.current_player}, which piece do you want to move?"
       puts "Row?"
@@ -22,15 +22,15 @@ if answer == "1"
       puts "Column?"
       column2 = gets.chomp.to_i
 
-      if game.validate_move(row1, column1, row2, column2) # (row1 - row2).abs == 1 && (column1 - column2).abs == 1 # added to validate_move
+      if game.validate_move(row1, column1, row2, column2)
         game.move(row1, column1, row2, column2)
         game.toggle_player(game.current_player)
         pp game.king
-      elsif game.validate_jump(row1, column1, row2, column2) # (row1 - row2).abs == 2 && (column1 - column2).abs == 2 # added to validate_jump
+      elsif game.validate_jump(row1, column1, row2, column2)
+        # Next two lines: in or out of loop?
+        game.jump(row1, column1, row2, column2)
+        pp game.king
         loop do
-          game.jump(row1, column1, row2, column2)
-          pp game.king
-
           puts "Jump again? (Y/N)"
           jump_again = gets.chomp
 
@@ -55,10 +55,10 @@ if answer == "1"
         puts "You win!"
         break
       else
-        pp game.current_player
       end
     else
-      game.computer_turn
+      puts "My turn!"
+      game.computer_turn # TODO: add multiple jumps for computer
       pp game.king
 
       if !(game.board.flatten.any?("x") || game.board.flatten.any?("X"))
